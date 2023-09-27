@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Values : MonoBehaviour
 {
-    private List<float> val = new List<float>();
+    public List<float> val = new List<float>();
 
     public void receiveData(List<float> list)
     {
@@ -14,6 +14,5 @@ public class Values : MonoBehaviour
     public void test()
     {
         Debug.Log("Notificacion desde el main " + val[0] +" , "+ val[1]);
-
     }
 }
