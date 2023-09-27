@@ -10,8 +10,6 @@ public class GetData : MonoBehaviour
 public void ReadData(string s)
     {
         string input = s;
-
-        Debug.Log("getdata"+input);
         sendData.saveData(input);
     }
 }

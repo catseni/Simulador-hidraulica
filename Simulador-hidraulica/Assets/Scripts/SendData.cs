@@ -11,8 +11,6 @@ public class SendData : MonoBehaviour
     {
         float valor = float.Parse(s);
         valores.Insert(0, valor);
-
-        Debug.Log("Send Data con: " + string.Join(", ", valores));
     }
 
     public void flush()
@@ -23,8 +21,7 @@ public class SendData : MonoBehaviour
 
     public void SendInfo()
     {
-        values.Numeros = valores;
-        Debug.Log("La informacion fue enviada exitosamente.");
+        values.receiveData(valores);
 
     }
 
