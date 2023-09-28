@@ -57,8 +57,8 @@ public class CanalCircular : Canal
     {
         if (y <= D / 2)
         {
-            double theta = 2 * Mathf.Acos(1 - (2 * (float)(y / D)));
-            double A = (Mathf.Pow((float)D, 2) / 4) * (theta - Mathf.Sin((float)theta));
+            double theta = Mathf.Acos((float) (1 - ((2*y / D))));
+            double A = 0.25f * (float)(theta - (float)(1/2)*Mathf.Sin((float)(2*theta))*((float)Mathf.Pow((float)D,2)));
             return A;
         }
         else
@@ -72,7 +72,7 @@ public class CanalCircular : Canal
     {
         if (y <= D / 2)
         {
-            double theta = 2 * Mathf.Acos(1 - (2 * (float)(y / D)));
+            double theta = Mathf.Acos(1 - (2 * (float)(y / D)));
             double P = D * theta;
             return P;
         }
@@ -87,7 +87,8 @@ public class CanalCircular : Canal
     {
         if (y <= D / 2)
         {
-            return D;
+            double theta = Mathf.Acos(1 - (2 * (float)(y / D)));
+            return Mathf.Sin((float)theta)*D;
         }
         else
         {
@@ -95,4 +96,6 @@ public class CanalCircular : Canal
             return 2 * y;
         }
     }
+
 }
+

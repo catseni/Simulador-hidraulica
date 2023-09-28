@@ -33,7 +33,7 @@ public class CanalCalculations : MonoBehaviour
     public double n;            // Rugosidad
     public double yn;           // Tirante normal propuesto
     public static double yc;    // Tirante crítico propuesto
-    public double epsilon = 1e-6; // Epsilon
+    public double epsilon = 0.000001; // Epsilon
 
     // Para el trapecial
     public double b;            // Ancho de la plantilla
@@ -113,41 +113,33 @@ public class CanalCalculations : MonoBehaviour
         switch (tipoCanal)
         {
             case TipoCanal.Trapecial:
-                resultadoNormal.Q  = values.val[6];
-                resultadoNormal.b  = values.val[4];
-                resultadoNormal.k1 = values.val[5];
-                resultadoNormal.k2 = values.val[3];
-                resultadoNormal.So = values.val[2];
-                resultadoNormal.n  = values.val[1];
-                resultadoNormal.yn = values.val[0];
-                resultadoNormal.yc = 0; // Acceso a yc a través de la clase
+                resultadoNormal.Q  = values.val[5];
+                resultadoNormal.b  = values.val[3];
+                resultadoNormal.k1 = values.val[4];
+                resultadoNormal.k2 = values.val[2];
+                resultadoNormal.So = values.val[1];
+                resultadoNormal.n  = values.val[0];
                 break;
             case TipoCanal.Rectangular:
-                resultadoNormal.Q  = values.val[4];
-                resultadoNormal.b  = values.val[3];
-                resultadoNormal.So = values.val[2];
-                resultadoNormal.n  = values.val[1];
-                resultadoNormal.yn = values.val[0];
+                resultadoNormal.Q  = values.val[3];
+                resultadoNormal.b  = values.val[2];
+                resultadoNormal.So = values.val[1];
+                resultadoNormal.n  = values.val[0];
                 resultadoNormal.k1 = 0;
                 resultadoNormal.k2 = 0;
-                resultadoNormal.yc = 0; // Acceso a yc a través de la clase
                 break;
             case TipoCanal.Triangular:
-                resultadoNormal.Q  = values.val[5];
-                resultadoNormal.k1 = values.val[4];
-                resultadoNormal.k2 = values.val[3];
-                resultadoNormal.So = values.val[2];
-                resultadoNormal.n  = values.val[1];
-                resultadoNormal.yn = values.val[0];
-                resultadoNormal.yc = 0; // Acceso a yc a través de la clase
+                resultadoNormal.Q  = values.val[4];
+                resultadoNormal.k1 = values.val[3];
+                resultadoNormal.k2 = values.val[2];
+                resultadoNormal.So = values.val[1];
+                resultadoNormal.n  = values.val[0];
                 break;
             case TipoCanal.Circular:
-                resultadoNormal.Q  = values.val[4];
-                resultadoNormal.D  = values.val[3];
-                resultadoNormal.So = values.val[2];
-                resultadoNormal.n  = values.val[1];
-                resultadoNormal.yn = values.val[0];
-                resultadoNormal.yc = 0; // Acceso a yc a través de la clase
+                resultadoNormal.Q  = values.val[3];
+                resultadoNormal.D  = values.val[2];
+                resultadoNormal.So = values.val[1];
+                resultadoNormal.n  = values.val[0];
                 break;
             default:
                 Debug.Log("Valores incorrectos, vuelve a intentar."); // Mensaje de error si el tipo de canal es desconocido
@@ -161,29 +153,25 @@ public class CanalCalculations : MonoBehaviour
         switch (tipoCanal)
         {
             case TipoCanal.Trapecial:
-                resultadoCritico.Q  = values.val[4];
-                resultadoCritico.b  = values.val[3];
-                resultadoCritico.k1 = values.val[2];
-                resultadoCritico.k2 = values.val[1];
-                resultadoCritico.yc = values.val[0]; // Acceso a yc a través de la clase
+                resultadoCritico.Q  = values.val[3];
+                resultadoCritico.b  = values.val[2];
+                resultadoCritico.k1 = values.val[1];
+                resultadoCritico.k2 = values.val[0];
                 break;
             case TipoCanal.Rectangular:
-                resultadoCritico.Q  = values.val[2];
-                resultadoCritico.b  = values.val[1];
-                resultadoCritico.yc = values.val[0]; // Acceso a yc a través de la clase
+                resultadoCritico.Q  = values.val[1];
+                resultadoCritico.b  = values.val[0];
                 resultadoCritico.k1 = k2 - k1;
                 resultadoCritico.k2 = k1 - k2 * resultadoCritico.Q;
                 break;
             case TipoCanal.Triangular:
-                resultadoCritico.Q  = values.val[3];
-                resultadoCritico.k1 = values.val[2];
-                resultadoCritico.k2 = values.val[1];
-                resultadoCritico.yc = values.val[0]; // Acceso a yc a través de la clase
+                resultadoCritico.Q  = values.val[2];
+                resultadoCritico.k1 = values.val[1];
+                resultadoCritico.k2 = values.val[0];
                 break;
             case TipoCanal.Circular:
-                resultadoCritico.Q  = values.val[2];
-                resultadoCritico.D  = values.val[1];
-                resultadoCritico.yc = values.val[0]; // Acceso a yc a través de la clase
+                resultadoCritico.Q  = values.val[1];
+                resultadoCritico.D  = values.val[0];
                 break;
             default:
                 Debug.Log("Valores incorrectos, vuelve a intentar."); // Mensaje de error si el tipo de canal es desconocido
@@ -217,12 +205,24 @@ public class CanalCalculations : MonoBehaviour
 
     public void CalcularNormal()
     {
-        resultadoNormal.yn = NewtonRaphsonNormal.FindNormalDepth(resultadoNormal.Q, resultadoNormal.b, resultadoNormal.n, resultadoNormal.So, epsilon);
+        if(tipoCanal == TipoCanal.Circular)
+        {
+            resultadoNormal.yn = NewtonRaphsonNormal.FindNormalDepthCircular(resultadoNormal.Q, resultadoNormal.D, resultadoNormal.n, resultadoNormal.So, epsilon);
+        }
+        else
+            resultadoNormal.yn = NewtonRaphsonNormal.FindNormalDepth(resultadoNormal.Q, resultadoNormal.b, resultadoNormal.k1,resultadoNormal.k2, resultadoNormal.n, resultadoNormal.So, epsilon);
     }
 
     public void CalcularCritico()
     {
-        resultadoCritico.yn = NewtonRaphsonCritico.FindCriticalDepth(resultadoCritico.Q, resultadoCritico.b, (resultadoCritico.k1 + resultadoCritico.k2) / 2, resultadoCritico.n, epsilon);
+        if(tipoCanal == TipoCanal.Circular)
+        {
+            resultadoCritico.yc = NewtonRaphsonCritico.FindCriticalDepthCircular(resultadoCritico.Q, resultadoCritico.D, epsilon);
+        }
+        else
+        {
+            resultadoCritico.yc = NewtonRaphsonCritico.FindCriticalDepth(resultadoCritico.Q, resultadoCritico.b, resultadoCritico.k1 , resultadoCritico.k2, resultadoCritico.n, epsilon);
+        }
     }
     #endregion
 
